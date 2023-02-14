@@ -1,0 +1,12 @@
+#+title: CS 6110 Software Verification Project
+
+* Resources
+
+ - [[https://github.com/model-checking/kani][Kani]] :: Model checker for Rust
+ - [[https://hal.inria.fr/hal-03737878/document][Creusot paper]] :: Formal verification of Rust code
+ - [[https://github.com/sarsko/CreuSAT][CreuSat]] :: Formally verified SAT solver written in Rust, verified with Creusot
+
+* Authors
+
+ - [[https://github.com/tcallred][Taylor Allred]]
+ - [[https://github.com/ashton314][Ashton Wiersdorf]]
