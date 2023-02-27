@@ -1,9 +1,33 @@
 #+title: CS 6110 Software Verification Project
 
+Verify all the things!
+
+* Synopsis
+
+Class project to verify some software written in Rust.
+
+* Description
+
+We'll put stuff here once we've figured out what we're doing.
+
+* Goals
+
+ - Learn about the CreuSAT annotations
+ - Build something and verify it with the annotations
+ - Consider ways that the annotations could be improved
+
 * Resources
 
  - [[https://github.com/model-checking/kani][Kani]] :: Model checker for Rust
+
+   From the README: Kani is particularly useful for verifying unsafe code in
+   Rust, where many of the language's usual guarantees are no longer checked by
+   the compiler.
+
+   Kani has a [[https://model-checking.github.io/kani/][tutorial]].
+ 
  - [[https://hal.inria.fr/hal-03737878/document][Creusot paper]] :: Formal verification of Rust code
+ - [[https://github.com/xldenis/creusot][Creusot repository]] :: Source of the Creusot code
  - [[https://github.com/sarsko/CreuSAT][CreuSat]] :: Formally verified SAT solver written in Rust, verified with Creusot
 
 * Authors
