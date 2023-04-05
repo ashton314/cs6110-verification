@@ -29,5 +29,5 @@ RUN /root/.cargo/bin/cargo install --path creusot
 WORKDIR /
 RUN git clone --depth 1 https://github.com/sarsko/CreuSAT.git
 WORKDIR CreuSAT
-RUN cargo build
-RUN cargo install --force cargo-make
+RUN /root/.cargo/bin/cargo build
+RUN /root/.cargo/bin/cargo install --force cargo-make
