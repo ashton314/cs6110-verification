@@ -23,3 +23,7 @@ clean-all: clean
 .PHONY: container
 container:
 	docker build -t cs6110:latest .
+
+.PHONY: run-container
+run-container:
+	docker run --rm -it cs6110:latest bash
