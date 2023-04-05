@@ -22,5 +22,5 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
 
 # Install Creusot
 RUN git clone https://github.com/xldenis/creusot
-
 WORKDIR creusot
+RUN /root/.cargo/bin/cargo install --path creusot

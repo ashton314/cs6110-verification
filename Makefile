@@ -19,3 +19,7 @@ clean:
 
 clean-all: clean
 	rm -f *.pdf
+
+.PHONY: container
+container:
+	docker build -t cs6110:latest .
