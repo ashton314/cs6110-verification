@@ -19,15 +19,16 @@ RUN opam install ocamlgraph why3 --yes
 
 # Configure Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+ENV PATH=/root/.cargo/bin/:$PATH
 
 # Install Creusot
 RUN git clone --depth 1 https://github.com/xldenis/creusot
 WORKDIR creusot
-RUN /root/.cargo/bin/cargo install --path creusot
+RUN cargo install --path creusot
 
 # Install CreuSAT
 WORKDIR /
 RUN git clone --depth 1 https://github.com/sarsko/CreuSAT.git
 WORKDIR CreuSAT
-RUN /root/.cargo/bin/cargo build
-RUN /root/.cargo/bin/cargo install --force cargo-make
+RUN cargo build
+RUN rustup run $(rustup show active-toolchain | sed -E 's/^([^ ]+) .*/\1/') cargo install --force cargo-make
