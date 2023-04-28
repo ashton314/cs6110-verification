@@ -7,3 +7,5 @@
 paper_draft*
 **/target/
 .vscode/
+*.out
+*.pdf

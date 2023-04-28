@@ -4,7 +4,7 @@ PDFLATEXFLAGS	:= -interaction=nonstopmode -halt-on-error -file-line-error
 BIBTEX	:= biber
 
 .PHONY: all
-all: paper_draft.pdf
+all: paper.pdf
 
 # -draftmode for pdflatex, --no-pdf for xelatex
 %.pdf: %.tex
