@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{biblatex}
+\usepackage{hyperref}
+\usepackage{fullpage}
+\usepackage{libertinus}
+
+\bibliography{rust_model_checking}
+
+\title{CS6110: Software Verification Final Project: Formal Verification of Rust Programs with Creusot}
+\author{Taylor Allred (taylor.allred21@gmail.com)\\ Ashton Wiersdorf (academics@wiersdorfmail.net)}
+\date{Spring 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Rust is the hottest new language in systems programming.
+Its linear type system provides compile-time guarantees about memory resources and avoids race-conditions.
+With an increased reliance on Rust for critical code, there's a greater need for verification tools.
+Several new tools have popped up to fill this need: in particular, we are looking at Creusot, a formal verification system, and Kani, a model checker.
+In our project we will be verifying code with Creusot and/or Kani.
+\end{abstract}
+
+\section{Overview of Creusot}
+
+% Have a diagram or something of how all the pieces fit together
+
+\subsection{Understanding Why3}
+
+% Include discussion of how why3 differs from e.g. Coq (proof automator vs. proof assistant)
+
+\subsection{SAT Solvers}
+
+% Brief discussion on what e.g. z3 &co. are
+
+\section{How Rust enables Creusot}
+
+% How does Creusot take advantage of Rust's unique type system & stuff to work?
+
+% Why is it cool that it's using Rust?
+% - macros
+% - in-line documentation/verification markup
+
+\section{Verification with Creusot}
+
+\subsection{Example: verifying a very simple function}
+
+\subsection{Example: a more complex example}
+
+\section{Experience Report: verifying a library} % ← maybe; big maybe
+
+\section{Conclusion}
+
+% Discuss the merits of using Creusot---maybe include some UI/UX criticisms
+
+\section{Resources}
+
+\begin{description}
+  \item[Creusot] \cite{denisCreusot2023} \cite{denisCreusotFoundryDeductive2022}
+
+    Creusot is a formal verification tool written in Rust for verifying Rust programs.
+    
+  \item[CreuSAT] \cite{skotamCreuSAT2023}
+
+    CreuSAT is a SAT solver verified with Creusot.
+    
+  \item[Kani] \cite{Kani2023}
+
+    From the README: Kani is particularly useful for verifying unsafe code in
+    Rust, where many of the language's usual guarantees are no longer checked by
+    the compiler.
+
+\end{description}
+
+\printbibliography
+
+\end{document}
+
+% Local Variables:
+% jinx-local-words: "Kani"
+% End:

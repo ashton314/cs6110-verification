@@ -12,7 +12,7 @@ We'll put stuff here once we've figured out what we're doing.
 
 * Goals
 
- - Learn about the CreuSAT annotations
+ - Learn about the Creusot annotations
  - Build something and verify it with the annotations
  - Consider ways that the annotations could be improved
 
