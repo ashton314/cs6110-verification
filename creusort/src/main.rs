@@ -6,6 +6,12 @@ use creusot_contracts::{
 };
 
 #[predicate]
+fn sorted_range<T: OrdLogic>(s: Seq<T>, l: Int, u: Int) -> bool {
+    pearlite! { forall<i: Int, j: Int>
+    l <= i && i < j && j < u ==> s[i] <= s[j] }
+}
+
+#[predicate]
 fn sorted<T: OrdLogic>(s: Seq<T>) -> bool {
     sorted_range(s, 0, s.len())
 }
@@ -30,12 +36,9 @@ where
     }
 }
 
-// fn main() {
-//     println!("Hello, world!");
-
-//     // let mut foo = vec![3, 1, 4, 5, 9, 2, 6, 8];
-//     // println!("Foo: {}", foo.clone());
-// }
+fn main() {
+    // No prints!
+}
 
 // #[predicate]
 // fn sorted_range<T: OrdLogic>(s: Seq<T>, l: Int, u: Int) -> bool {
