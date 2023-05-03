@@ -1,0 +1,43 @@
+module Max_spec
+
+use int.Int
+
+val imprecise_max_spec (a b : int) : int
+ensures { result = a \/ result = b }
+
+val max_spec (a b : int) : int
+ensures { result = a \/ result = b }
+ensures { result >= a /\ result >= b }
+
+end
+
+module Test
+
+use int.Int
+use Max_spec
+
+let test () =
+  let tmp = imprecise_max_spec 3 4 in
+  assert { tmp = 4 }
+
+let test2 () =
+  let tmp = max_spec 3 4 in
+  assert { tmp = 4 }
+
+end
+
+module Max_implem
+
+use int.Int
+
+let imprecise_max (a b : int) : int
+ensures { result = a \/ result = b }
+  =
+  if = >= b then a else b
+
+let max (a b : int) : int
+ensures { result = a \/ result = b }
+ensures { result >= a /\ result >= b }
+  =
+  if = >= b then a else b
+end

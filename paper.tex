@@ -7,7 +7,7 @@
 \bibliography{rust_model_checking}
 
 \title{CS6110: Software Verification Final Project: Formal Verification of Rust Programs with Creusot}
-\author{Taylor Allred \texttt{taylor.allred21@gmail.com}\\ Ashton Wiersdorf \texttt{academics@wiersdorfmail.net}}
+\author{Taylor Allred \texttt{taylor.allred21@gmail.com}\\ Ashton Wiersdorf \texttt{research@wiersdorfmail.net}}
 \date{Spring 2023}
 
 \begin{document}
@@ -32,6 +32,19 @@ In our project we will be verifying code with Creusot and/or Kani.
 \subsection{Understanding Why3}
 
 % Include discussion of how why3 differs from e.g. Coq (proof automator vs. proof assistant)
+
+Why3 describes itself as ``a platform for deductive program verification''\footnote{https://why3.lri.fr/}---instead of an interactive theorem prover like Coq or the like, Why3 is a layer above.
+Why3 provides a language---called WhyML---that can be translated into languages a multitude of theorem provers can understand.
+This is neat because we every prover has its strengths---Coq will be a better fit for certain proofs than fully-automated provers, whereas some provers will work without the laborious intervention that Coq requires.
+Why3 allows us to have it all.
+
+\subsubsection{Writing specifications}
+
+% How do we know that specifications are specific enough? Making tests is one way to check.
+
+\subsubsection{Writing a program}
+
+\subsubsection{Showing the program is faithful to the specification}
 
 \subsection{SAT Solvers}
 
