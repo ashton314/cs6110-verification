@@ -3,6 +3,8 @@
 \usepackage{biblatex}
 \usepackage{hyperref}
 \usepackage{fullpage}
+\usepackage{listings}
+\usepackage{xcolor}
 
 \bibliography{rust_model_checking}
 
@@ -23,17 +25,27 @@ Several new tools have popped up to fill this need: in particular, we are lookin
 In our project we will be verifying code with Creusot and/or Kani.
 \end{abstract}
 
+\setcounter{tocdepth}{2}
 \tableofcontents
 
 \section{Overview of Creusot}
 
-% Have a diagram or something of how all the pieces fit together
+Creusot\cite{denisCreusot2023} is a tool for formally verifying Rust programs.
+Creusot allows you to write specification for your software using Rust macros, and then defer to the Why3\cite{bobotWhy3ShepherdYour} platform to discharge those proofs.
+
+Here is an overview of how Creusot works:
+
+\begin{figure}[h]
+  \centering
+\includegraphics[width=0.5\textwidth]{creusot_why3_diagram}
+\caption{How Creusot fits into the bigger picture}
+\end{figure}
 
 \subsection{Understanding Why3}
 
 % Include discussion of how why3 differs from e.g. Coq (proof automator vs. proof assistant)
 
-Why3 describes itself as ``a platform for deductive program verification''\footnote{https://why3.lri.fr/}---instead of an interactive theorem prover like Coq or the like, Why3 is a layer above.
+Why3 describes itself as ``a platform for deductive program verification''\footnote{https://why3.lri.fr/}---instead of an interactive theorem prover like Coq or the like, Why3 is a layer above and focuses on automating the use of such provers.\cite{bobotWhy3ShepherdYour}
 Why3 provides a language---called WhyML---that can be translated into languages a multitude of theorem provers can understand.
 This is neat because we every prover has its strengths---Coq will be a better fit for certain proofs than fully-automated provers, whereas some provers will work without the laborious intervention that Coq requires.
 Why3 allows us to have it all.
@@ -93,7 +105,7 @@ The identifier with a borrowed value may read the contents at the given location
 There is a special kind of borrow called a mutable borrow that does give the borrower mutable access to the value, however, the owner may only lend out one mutable reference at a time.   
 Given these properties of the language, Creusot is able to reason about mutating pointers through a technique called "prophecies".
 
-In the Creusot paper, it gives an example of prophecies in action with a function called "gnome_sort" which is a function that takes a mutable reference to a vector and sorts it in place. 
+In the Creusot paper, it gives an example of prophecies in action with a function called \texttt{gnome\_sort} which is a function that takes a mutable reference to a vector and sorts it in place. 
 
 \begin{verbatim}
 #[ensures(sorted_range(@^v, 0, (@^v).len()))]
@@ -120,11 +132,11 @@ Fortunately, at the end of the function, when the mutable reference goes out of 
 After which, the original owned value may be considered to be the final value of the mutable borrow. 
 This is all possible because there may only be one mutable borrow at a time and no aliasing. 
 So, whatever the borrowed value finishes as must be the new value of the owned variable. 
-In the sorting example, we can see that the annotations may refer to the current value of the reference (with the * operator) and also to the final value of the reference (with the ^ operator).
+In the sorting example, we can see that the annotations may refer to the current value of the reference (with the * operator) and also to the final value of the reference (with the \texttt{\^} operator).
 Using an "ensures" clause, we can set a post-condition that the vector passed into the sorting function is sorted when the function exits. 
-(Here "sorted_range" is a custom predicate). 
-You can see "^v" which refers to the "final" value of v. 
-We can also make a post-condition that ensures that the final value of v(^v) is a permutation of the current value of v (*v).
+(Here \texttt{sorted\_range} is a custom predicate). 
+You can see \texttt{\^v} which refers to the "final" value of v. 
+We can also make a post-condition that ensures that the final value of \texttt{v(\^v)} is a permutation of the current value of \texttt{v (*v)}.
 Looking further down, we see that being able to refer to both the current value and final value of v is very useful when writing loop invariants. 
 Here, we are declaring a loop invariant that the current value of v (after each iteration) has a sorted subsequence from 0 to i. 
 Also, we declare that the the current value of v has remained a permutation of the original vector.  
