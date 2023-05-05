@@ -43,24 +43,39 @@ Here is an overview of Creusot's role in verifying Rust software:
 \caption{How Creusot fits into the bigger picture}
 \end{figure}
 
-\subsection{Understanding Why3}
+Why3 acts as a \emph{frontend} to various theorem provers---by targeting Why3, Creusot can take advantage of a wide variety of theorem provers with each of their unique strengths.
+More about this in \ref{why-why3}.
 
-% Include discussion of how why3 differs from e.g. Coq (proof automator vs. proof assistant)
+% More on the tooling Creusot provides?
+
+\section{Understanding Why3}
+\label{why-why3}
 
 Why3 describes itself as ``a platform for deductive program verification''\footnote{https://why3.lri.fr/}---instead of an interactive theorem prover like Coq or the like, Why3 is a layer above and focuses on automating the use of such provers.\cite{bobotWhy3ShepherdYour}
 Why3 provides a language---called WhyML---that can be translated into languages a multitude of theorem provers can understand.
 This is neat because we every prover has its strengths---Coq will be a better fit for certain proofs than fully-automated provers, whereas some provers will work without the laborious intervention that Coq requires.
 Why3 allows us to have it all.
 
-\subsubsection{Writing specifications}
+\subsection{WhyML}
 
-% How do we know that specifications are specific enough? Making tests is one way to check.
+WhyML has a well-specified structure\footnote{https://why3.lri.fr/doc/syntaxref.html}.
+Let's take a brief look at WhyML to see how one would go about creating a simple specification.
 
-\subsubsection{Writing a program}
+Consider a simple verification of a \texttt{sum} function. This is how we would write it with WhyML:
 
-\subsubsection{Showing the program is faithful to the specification}
+\begin{verbatim}
+\end{verbatim}
 
-\subsection{SAT Solvers}
+\subsection{Discharging proofs}
+
+Why3 enables us to use many different proof automators and assistants at the same time.
+We will leave a full explaination of how to use the Why3 IDE to do this to their documentation\footnote{https://why3.lri.fr/doc/starting.html#sec-gui}, but suffice it to say that one of the most interesting abilities of Why3 is to take a Why3 goal and use any sort of prover on it to discharge it.
+
+For example, SMT solvers can discharge proofs automatically.
+
+\subsection{SMT Solvers}
+
+\subsection{Proof automation}
 
 % Brief discussion on what e.g. z3 &co. are
 
@@ -88,9 +103,9 @@ Within these annotations, we can use a prepositional logic language called Pearl
 fn my_function(i: u32) -> bool { ... }
 \end{verbatim}
 
-Here we can see that Creusot gives us some contract expressions in the form of annotation macros that let us specify the pre-conditions (using "requires") and post-conditions (using "ensures") of the function. 
+Here we can see that Creusot gives us some contract expressions in the form of annotation macros that let us specify the pre-conditions (using ``requires'') and post-conditions (using ``ensures'') of the function. 
 These expressions may refer to any of the arguments to the function as well as the final result. 
-With the Pearlite syntax, we may write prepositional logic with operators such as "forall", implies ("==>"), "exists", as well as the standard boolean operators. 
+With the Pearlite syntax, we may write prepositional logic with operators such as ``forall'', implies ("==>"), ``exists'', as well as the standard boolean operators. 
 Creusot also gives us the capability of writing Rust functions that can be used as custom predicates inside annotations. 
 
 These annotation macros can be read by the standard Rust compiler but are ignored. 
@@ -101,11 +116,11 @@ This makes it so that Creusot annotations can show more semantic information tha
 The biggest gains that Creusot gets from being on Rust is the ownership-borrowing system. 
 Most systems software is writing in languages like C/C++ which make frequent use of unbounded mutable pointers that can cause aliasing. 
 Aliasing wreaks havoc on verification software because two pointers may point to the same thing and mutate it throughout a program. 
-In Rust, every value is "owned" by an identifier. When that identifier goes out of scope, the value that the identifier refers to is dropped from memory.
-You may, however, lend out a reference to the value, which in Rust is called "borrowing". 
+In Rust, every value is ``owned'' by an identifier. When that identifier goes out of scope, the value that the identifier refers to is dropped from memory.
+You may, however, lend out a reference to the value, which in Rust is called ``borrowing''. 
 The identifier with a borrowed value may read the contents at the given location but it may not mutate it. 
 There is a special kind of borrow called a mutable borrow that does give the borrower mutable access to the value, however, the owner may only lend out one mutable reference at a time.   
-Given these properties of the language, Creusot is able to reason about mutating pointers through a technique called "prophecies".
+Given these properties of the language, Creusot is able to reason about mutating pointers through a technique called ``prophecies''.
 
 In the Creusot paper, it gives an example of prophecies in action with a function called \texttt{gnome\_sort} which is a function that takes a mutable reference to a vector and sorts it in place. 
 
@@ -128,16 +143,16 @@ fn gnome_sort<T: Ord>(v: &mut Vec<T>) {
 }
 \end{verbatim} 
 
-Creusot will look at the this mutable reference and create a "prophecy", which in WhyML is a record containing a current value and a final value. 
+Creusot will look at the this mutable reference and create a ``prophecy'', which in WhyML is a record containing a current value and a final value. 
 The current value updates with every mutation to the value through the mutable reference but the final value is initialized to be a non-deterministic value that has yet to be resolved. 
 Fortunately, at the end of the function, when the mutable reference goes out of scope, the prophecy may safely resolve the final value to be the current value.
 After which, the original owned value may be considered to be the final value of the mutable borrow. 
 This is all possible because there may only be one mutable borrow at a time and no aliasing. 
 So, whatever the borrowed value finishes as must be the new value of the owned variable. 
 In the sorting example, we can see that the annotations may refer to the current value of the reference (with the * operator) and also to the final value of the reference (with the \texttt{\^} operator).
-Using an "ensures" clause, we can set a post-condition that the vector passed into the sorting function is sorted when the function exits. 
+Using an ``ensures'' clause, we can set a post-condition that the vector passed into the sorting function is sorted when the function exits. 
 (Here \texttt{sorted\_range} is a custom predicate). 
-You can see \texttt{\^v} which refers to the "final" value of v. 
+You can see \texttt{\^v} which refers to the ``final'' value of v. 
 We can also make a post-condition that ensures that the final value of \texttt{v(\^v)} is a permutation of the current value of \texttt{v (*v)}.
 Looking further down, we see that being able to refer to both the current value and final value of v is very useful when writing loop invariants. 
 Here, we are declaring a loop invariant that the current value of v (after each iteration) has a sorted subsequence from 0 to i. 
@@ -151,7 +166,7 @@ Traits define a set of functions that a datatype must implement.
 Creusot defines two traits: Resolve and Model. 
 The Resolve trait lets the user specify what information can be gained when a value referred to inside an annotation is resolved. 
 This is what makes Creusot's annotations so semantically powerful and usable across many data types. 
-Another trait that helps with this is the Model trait. The Model trait simply allows users to treat a complex data structure in terms of a "model" which abstracts away the implementation details. 
+Another trait that helps with this is the Model trait. The Model trait simply allows users to treat a complex data structure in terms of a ``model'' which abstracts away the implementation details. 
 This is useful for referring to data structures inside annotations.  
 
 The Rust programming language, with it's strong static memory guarantees, trait system, and metaprogramming capabilities, 
@@ -194,5 +209,5 @@ semantically meaningful annotations for that verification on Rust code.
 \end{document}
 
 % Local Variables:
-% jinx-local-words: "Kani"
+% jinx-local-words: "CreuSAT Creusot's Kani Pearlite WhyML creusot"
 % End:
