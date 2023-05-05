@@ -53,7 +53,7 @@ More about this in \ref{why-why3}.
 \section{Understanding Why3}
 \label{why-why3}
 
-Why3 describes itself as ``a platform for deductive program verification''\footnote{https://why3.lri.fr/}---instead of an interactive theorem prover like Coq or the like, Why3 is a layer above and focuses on automating the use of such provers.\cite{bobotWhy3ShepherdYour}
+Why3 describes itself as ``a platform for deductive program verification''\footnote{\url{https://why3.lri.fr/}}---instead of an interactive theorem prover like Coq or the like, Why3 is a layer above and focuses on automating the use of such provers.\cite{bobotWhy3ShepherdYour}
 Why3 provides a language---called WhyML---that can be translated into languages a multitude of theorem provers can understand.
 This is neat because we every prover has its strengths---Coq will be a better fit for certain proofs than fully-automated provers, whereas some provers will work without the laborious intervention that Coq requires.
 Why3 allows us to have it all.
@@ -79,7 +79,7 @@ end
 \label{fig:sumequiv}
 \end{figure}
 
-This is an incredibly simple example; we will leave a full description of what the language can do to the specification\footnote{https://why3.lri.fr/doc/syntaxref.html}, but suffice it to say that WhyML has all of the language constructs that you would expect from a formal logic system.
+This is an incredibly simple example; we will leave a full description of what the language can do to the specification\footnote{\url{https://why3.lri.fr/doc/syntaxref.html}}, but suffice it to say that WhyML has all of the language constructs that you would expect from a formal logic system.
 
 % TODO: we should highlight some differences
 
@@ -115,7 +115,7 @@ Qed.
 
 Now it is up to us to fill in the rest of the proof.
 
-We have to use the ZArith module from the Coq standard library\footnote{} because Why3 works with integers, not naturals.
+We have to use the ZArith module from the Coq standard library\footnote{\url{https://coq.inria.fr/library/Coq.ZArith.BinInt.html}} because Why3 works with integers, not naturals.
 We can add this line after the \texttt{intros x.} to get Coq to accept the proof:
 
 \begin{verbatim}
@@ -243,7 +243,7 @@ We think Creusot holds promise---Rust's popularity is exploding, and the lifetim
 Why3 is a really neat platform that brings together a lot of disparate tools and plays to their strengths.
 However, the user experience of Creusot is just not there yet: there is \emph{no} up-to-date documentation that we were able to find, and the frequent breaks made using Creusot all but impossible.
 
-To be fair, the authors of Creusot \emph{do} point out that this is unstable research software.\footnote{https://github.com/xldenis/creusot#about}
+To be fair, the authors of Creusot \emph{do} point out that this is unstable research software.\footnote{See the README of the Creusot\cite{denisCreusot2023} repository for this warning.}
 If your work can tolerate frequent breakage, this might be a good option for you right now.
 Neither of us would use this in its current form though---once things stabilize, however, Creusot will be a formidable addition to Rust's already substantial clout in the reliable software space.
 
