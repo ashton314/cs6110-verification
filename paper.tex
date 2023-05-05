@@ -225,12 +225,27 @@ semantically meaningful annotations for that verification on Rust code.
 
 Creusot works by installing a helper tool to run with Rust's \texttt{cargo} build and package manager.
 
-
 \subsection{Example: verifying a simple function}
 
 \section{Conclusion}
 
-% Discuss the merits of using Creusot---maybe include some UI/UX criticisms
+Rust makes building reliable software simple, and Why3 makes using automated theorem provers easy---what isn't there to like?
+Unfortunately, the user experience with Creusot leaves a lot to be desired.
+While we were working on this project we spent weeks just trying to get all of the Rust toolchains, libraries, etc. to line up just right so that we could compile Creusot.
+Once we got Creusot compiled, we discovered that CreuSAT didn't work because it was built with an older version of Creusot.
+Taylor was able to track down the version of Creusot that works with CreuSAT, and Ashton was able to plug everything together to get CreuSAT to verify.
+
+However, the setup was brittle and easily slipped out of alignment.
+Moreover, we found that many (all?) of the examples from the Creusot paper didn't work on this slightly out-of-date version of Creusot---they required a still older version of Creusot to run.
+To top it all off, when we did find some examples that ran with the latest Creusot version, we soon ran into problems because the developers of Creusot shipped yet more breaking changes to Pearlite while we were in the process of trying to verify some code.
+
+We think Creusot holds promise---Rust's popularity is exploding, and the lifetimes of Rust make analyzing it easy and robust.
+Why3 is a really neat platform that brings together a lot of disparate tools and plays to their strengths.
+However, the user experience of Creusot is just not there yet: there is \emph{no} up-to-date documentation that we were able to find, and the frequent breaks made using Creusot all but impossible.
+
+To be fair, the authors of Creusot \emph{do} point out that this is unstable research software.\footnote{https://github.com/xldenis/creusot#about}
+If your work can tolerate frequent breakage, this might be a good option for you right now.
+Neither of us would use this in its current form though---once things stabilize, however, Creusot will be a formidable addition to Rust's already substantial clout in the reliable software space.
 
 \section{Resources}
 
