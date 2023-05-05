@@ -15,7 +15,7 @@ all: paper.pdf
 
 .PHONY: clean clean-all
 clean:
-	rm -f *.out *.log *.aux *.bbl *.bcf *.blg *.run.xml *.xdv
+	rm -f *.out *.log *.aux *.bbl *.bcf *.blg *.run.xml *.xdv paper.pdf *.toc
 
 clean-all: clean
 	rm -f *.pdf

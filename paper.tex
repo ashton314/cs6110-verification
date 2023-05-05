@@ -14,6 +14,7 @@
 \author{Taylor Allred \texttt{taylor.allred21@gmail.com}\\ Ashton Wiersdorf \texttt{research@wiersdorfmail.net}}
 \date{Spring 2023}
 
+\pagenumbering{gobble}
 \begin{document}
 
 \maketitle
@@ -25,13 +26,15 @@ Its linear type system provides compile-time guarantees about memory resources a
 With an increased reliance on Rust for critical code, there's a greater need for verification tools.
 Several new tools have popped up to fill this need: in particular, we are looking at Creusot, a formal verification system.
 In our project, we learned about and tried verifying code with Creusot.
-Our experience convinced us that the project seems very useful for verifying Rust code in theory but still needs some improvement for usability. 
-If nothing else, Creusot shows how to utilize Rust's unique features as well as existing theorem provers to make a compelling verification tool. 
+Our experience convinced us that the project seems very useful for verifying Rust code in theory but still needs some improvement for usability.
+If nothing else, Creusot shows how to utilize Rust's unique features as well as existing theorem provers to make a compelling verification tool.
 \end{abstract}
 
 \setcounter{tocdepth}{2}
 \tableofcontents
 
+\clearpage
+\pagenumbering{arabic}
 \section{Overview of Creusot}
 
 Creusot\cite{denisCreusot2023} is a tool for formally verifying Rust programs.
@@ -71,7 +74,7 @@ This is how we would write that in WhyML:
 \begin{verbatim}
 module SumEquiv
   use int.Int
-  
+
   goal SimpleThing: forall x:int. 2 * x = x + x
 end
 \end{verbatim}
@@ -135,42 +138,42 @@ This is so that Why3 can parse the source file and reliably rebuild the proof la
 % - macros
 % - in-line documentation/verification markup
 Creusot is a tool that, like similar tools in other languages, allows the user to annotate code with pre and post-conditions for deductive verification.
-But, it uniquely gains several useful features from being used on the Rust programming language. 
-Rust is most widely known for being a programming language that allows for safe and efficient code because of its linear type system that can reason about memory safety at compile time. 
-It also has a powerful trait system for polymorphism and a sophisticated macro system. 
-This makes the language a perfect target for annotation-based verification. 
-Creusot makes use of macros, traits, and the ownership-borrowing model to do verification. 
+But, it uniquely gains several useful features from being used on the Rust programming language.
+Rust is most widely known for being a programming language that allows for safe and efficient code because of its linear type system that can reason about memory safety at compile time.
+It also has a powerful trait system for polymorphism and a sophisticated macro system.
+This makes the language a perfect target for annotation-based verification.
+Creusot makes use of macros, traits, and the ownership-borrowing model to do verification.
 
 \subsection{Macros for annotations}
-In Rust, macros can be used to work on the AST directly and give the user powerful metaprogramming capabilities. 
-Creusot makes specific use of macros that annotate statements and declarations in the program. 
-Within these annotations, we can use a prepositional logic language called Pearlite to write invariants. 
+In Rust, macros can be used to work on the AST directly and give the user powerful metaprogramming capabilities.
+Creusot makes specific use of macros that annotate statements and declarations in the program.
+Within these annotations, we can use a prepositional logic language called Pearlite to write invariants.
 \begin{verbatim}
 #[requires(... precondition ...)]
 #[ensures(... postcondition ...)]
 fn my_function(i: u32) -> bool { ... }
 \end{verbatim}
 
-Here we can see that Creusot gives us some contract expressions in the form of annotation macros that let us specify the pre-conditions (using ``requires'') and post-conditions (using ``ensures'') of the function. 
-These expressions may refer to any of the arguments to the function as well as the final result. 
-With the Pearlite syntax, we may write prepositional logic with operators such as ``forall'', implies ("==>"), ``exists'', as well as the standard boolean operators. 
-Creusot also gives us the capability of writing Rust functions that can be used as custom predicates inside annotations. 
+Here we can see that Creusot gives us some contract expressions in the form of annotation macros that let us specify the pre-conditions (using ``requires'') and post-conditions (using ``ensures'') of the function.
+These expressions may refer to any of the arguments to the function as well as the final result.
+With the Pearlite syntax, we may write prepositional logic with operators such as ``forall'', implies ("==>"), ``exists'', as well as the standard boolean operators.
+Creusot also gives us the capability of writing Rust functions that can be used as custom predicates inside annotations.
 
-These annotation macros can be read by the standard Rust compiler but are ignored. 
-However, the Creusot Rust compiler will read them as well as the Rust source code to generate WhyML code for verification. 
-This makes it so that Creusot annotations can show more semantic information than simple comments and allows verification to serve as clear in-line documentation. 
+These annotation macros can be read by the standard Rust compiler but are ignored.
+However, the Creusot Rust compiler will read them as well as the Rust source code to generate WhyML code for verification.
+This makes it so that Creusot annotations can show more semantic information than simple comments and allows verification to serve as clear in-line documentation.
 
 \subsection{Ownership and borrowing of mutating pointers}
-The biggest gains that Creusot gets from being on Rust is the ownership-borrowing system. 
-Most systems software is writing in languages like C/C++ which make frequent use of unbounded mutable pointers that can cause aliasing. 
-Aliasing wreaks havoc on verification software because two pointers may point to the same thing and mutate it throughout a program. 
+The biggest gains that Creusot gets from being on Rust is the ownership-borrowing system.
+Most systems software is writing in languages like C/C++ which make frequent use of unbounded mutable pointers that can cause aliasing.
+Aliasing wreaks havoc on verification software because two pointers may point to the same thing and mutate it throughout a program.
 In Rust, every value is ``owned'' by an identifier. When that identifier goes out of scope, the value that the identifier refers to is dropped from memory.
-You may, however, lend out a reference to the value, which in Rust is called ``borrowing''. 
-The identifier with a borrowed value may read the contents at the given location but it may not mutate it. 
-There is a special kind of borrow called a mutable borrow that does give the borrower mutable access to the value, however, the owner may only lend out one mutable reference at a time.   
+You may, however, lend out a reference to the value, which in Rust is called ``borrowing''.
+The identifier with a borrowed value may read the contents at the given location but it may not mutate it.
+There is a special kind of borrow called a mutable borrow that does give the borrower mutable access to the value, however, the owner may only lend out one mutable reference at a time.
 Given these properties of the language, Creusot is able to reason about mutating pointers through a technique called ``prophecies''.
 
-In the Creusot paper, it gives an example of prophecies in action with a function called \texttt{gnome\_sort} which is a function that takes a mutable reference to a vector and sorts it in place. 
+In the Creusot paper, it gives an example of prophecies in action with a function called \texttt{gnome\_sort} which is a function that takes a mutable reference to a vector and sorts it in place.
 
 \begin{verbatim}
 #[ensures(sorted_range(@^v, 0, (@^v).len()))]
@@ -189,43 +192,65 @@ fn gnome_sort<T: Ord>(v: &mut Vec<T>) {
   }
   }
 }
-\end{verbatim} 
+\end{verbatim}
 
-Creusot will look at the this mutable reference and create a ``prophecy'', which in WhyML is a record containing a current value and a final value. 
-The current value updates with every mutation to the value through the mutable reference but the final value is initialized to be a non-deterministic value that has yet to be resolved. 
+Creusot will look at the this mutable reference and create a ``prophecy'', which in WhyML is a record containing a current value and a final value.
+The current value updates with every mutation to the value through the mutable reference but the final value is initialized to be a non-deterministic value that has yet to be resolved.
 Fortunately, at the end of the function, when the mutable reference goes out of scope, the prophecy may safely resolve the final value to be the current value.
-After which, the original owned value may be considered to be the final value of the mutable borrow. 
-This is all possible because there may only be one mutable borrow at a time and no aliasing. 
-So, whatever the borrowed value finishes as must be the new value of the owned variable. 
+After which, the original owned value may be considered to be the final value of the mutable borrow.
+This is all possible because there may only be one mutable borrow at a time and no aliasing.
+So, whatever the borrowed value finishes as must be the new value of the owned variable.
 In the sorting example, we can see that the annotations may refer to the current value of the reference (with the * operator) and also to the final value of the reference (with the \texttt{\^} operator).
-Using an ``ensures'' clause, we can set a post-condition that the vector passed into the sorting function is sorted when the function exits. 
-(Here \texttt{sorted\_range} is a custom predicate). 
-You can see \texttt{\^v} which refers to the ``final'' value of v. 
+Using an ``ensures'' clause, we can set a post-condition that the vector passed into the sorting function is sorted when the function exits.
+(Here \texttt{sorted\_range} is a custom predicate).
+You can see \texttt{\^v} which refers to the ``final'' value of v.
 We can also make a post-condition that ensures that the final value of \texttt{v(\^v)} is a permutation of the current value of \texttt{v (*v)}.
-Looking further down, we see that being able to refer to both the current value and final value of v is very useful when writing loop invariants. 
-Here, we are declaring a loop invariant that the current value of v (after each iteration) has a sorted subsequence from 0 to i. 
-Also, we declare that the the current value of v has remained a permutation of the original vector.  
-As we can see, Rust allows Creusot to not only reason about and verify mutating pointers but also gives user more powerful annotation capabilities. 
+Looking further down, we see that being able to refer to both the current value and final value of v is very useful when writing loop invariants.
+Here, we are declaring a loop invariant that the current value of v (after each iteration) has a sorted subsequence from 0 to i.
+Also, we declare that the the current value of v has remained a permutation of the original vector.
+As we can see, Rust allows Creusot to not only reason about and verify mutating pointers but also gives user more powerful annotation capabilities.
 
 \subsection{Creusot Traits}
-Creusot also gains some conveniences from the Rust trait system. 
-Traits are similar to type classes in Haskell, and allow for polymorphism. 
-Traits define a set of functions that a datatype must implement. 
-Creusot defines two traits: Resolve and Model. 
-The Resolve trait lets the user specify what information can be gained when a value referred to inside an annotation is resolved. 
-This is what makes Creusot's annotations so semantically powerful and usable across many data types. 
-Another trait that helps with this is the Model trait. The Model trait simply allows users to treat a complex data structure in terms of a ``model'' which abstracts away the implementation details. 
-This is useful for referring to data structures inside annotations.  
+Creusot also gains some conveniences from the Rust trait system.
+Traits are similar to type classes in Haskell, and allow for polymorphism.
+Traits define a set of functions that a datatype must implement.
+Creusot defines two traits: Resolve and Model.
+The Resolve trait lets the user specify what information can be gained when a value referred to inside an annotation is resolved.
+This is what makes Creusot's annotations so semantically powerful and usable across many data types.
+Another trait that helps with this is the Model trait. The Model trait simply allows users to treat a complex data structure in terms of a ``model'' which abstracts away the implementation details.
+This is useful for referring to data structures inside annotations.
 
-The Rust programming language, with it's strong static memory guarantees, trait system, and metaprogramming capabilities, 
-opened the door for tools like Creusot to make fine-grained static verification of mutating pointers not only possible, but also able to provide 
-semantically meaningful annotations for that verification on Rust code.   
+The Rust programming language, with it's strong static memory guarantees, trait system, and metaprogramming capabilities,
+opened the door for tools like Creusot to make fine-grained static verification of mutating pointers not only possible, but also able to provide
+semantically meaningful annotations for that verification on Rust code.
 
 \section{Verification with Creusot}
 
 Creusot works by installing a helper tool to run with Rust's \texttt{cargo} build and package manager.
 
 \subsection{Example: verifying a simple function}
+
+Consider the following Rust function:
+
+\begin{verbatim}
+#[requires(lo < hi)]
+#[ensures(^lo < ^hi)]
+fn palindrome_range(s: &[u8], lo: &mut usize, hi: &mut usize) {
+    #[invariant(*lo < *hi)]
+    #[invariant(*lo >= 0)]
+    #[invariant(*hi < (s.deep_model()).len())]
+    while *lo > 0 && *hi < s.len() - 1 && s[*lo - 1] == s[*hi + 1] {
+        lo = lo - 1;
+        hi = hi + 1;
+    }
+}
+\end{verbatim}
+
+This function takes a string, and and two integers \texttt{lo} and \texttt{hi} as mutable references.
+It walks the string in opposite directions as long as \texttt{lo} and \texttt{hi} index into the same letter: in short, this walks palindromes inside of strings.
+
+We have added some pre- and post-conditions to the function, namely that---as long as \texttt{lo} is less than \texttt{hi} at the beginning---their \emph{final values} will likewise be ordered.
+We also need to specify some invariants on the \texttt{while} loop.
 
 \section{Conclusion}
 
@@ -264,7 +289,7 @@ Neither of us would use this in its current form though---once things stabilize,
 
     CreuSAT shows that Creusot \emph{can} scale to significantly-sized projects.
     The UX and the documentation just aren't there for mainstream use, however.
-    
+
   \item[Kani] \cite{Kani2023}
 
     From the README: Kani is particularly useful for verifying unsafe code in
@@ -276,6 +301,7 @@ Neither of us would use this in its current form though---once things stabilize,
 
 \end{description}
 
+\clearpage
 \printbibliography
 
 \end{document}
