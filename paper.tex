@@ -7,16 +7,18 @@
 \usepackage{xcolor}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{geometry}
 
 \bibliography{rust_model_checking}
 
-\title{CS6110: Software Verification Final Project: Formal Verification of Rust Programs with Creusot}
+\title{{Formal Verification of Rust Programs with Creusot}\\{\large CS 6110 Software Verification Final Project}}
 \author{Taylor Allred \texttt{taylor.allred21@gmail.com}\\ Ashton Wiersdorf \texttt{research@wiersdorfmail.net}}
 \date{Spring 2023}
 
 \pagenumbering{gobble}
 \begin{document}
 
+\newgeometry{top=0.5in}
 \maketitle
 
 \begin{abstract}
@@ -34,6 +36,7 @@ If nothing else, Creusot shows how to utilize Rust's unique features as well as 
 \tableofcontents
 
 \clearpage
+\restoregeometry
 \pagenumbering{arabic}
 \section{Overview of Creusot}
 
@@ -227,6 +230,8 @@ semantically meaningful annotations for that verification on Rust code.
 \section{Verification with Creusot}
 
 Creusot works by installing a helper tool to run with Rust's \texttt{cargo} build and package manager.
+One adds the the Creusot annotations to rust code, runs \texttt{cargo creusot}, and then opens the \texttt{.mlcfg}\footnote{\texttt{.mlcfg} is an alternate to the WhyML input format.} in Why3, and works on verifying the code.
+One can also simply run \texttt{cargo build} to compile the Rust program---all Creusot annotations will be elided and the program will compile like normal Rust code.
 
 \subsection{Example: verifying a simple function}
 
@@ -252,6 +257,12 @@ It walks the string in opposite directions as long as \texttt{lo} and \texttt{hi
 We have added some pre- and post-conditions to the function, namely that---as long as \texttt{lo} is less than \texttt{hi} at the beginning---their \emph{final values} will likewise be ordered.
 We also need to specify some invariants on the \texttt{while} loop.
 
+\subsection{Running the example}
+
+Unfortunately, despite our best efforts, we were not able to make Creusot run top-to-bottom.
+All the documentation was too out of date, and the toolchain was too unstable.
+The most we were able to do was verify CreuSAT---Creusot \emph{can} work---but we were unable to make it work on even simple examples.
+
 \section{Conclusion}
 
 Rust makes building reliable software simple, and Why3 makes using automated theorem provers easy---what isn't there to like?
@@ -271,6 +282,12 @@ However, the user experience of Creusot is just not there yet: there is \emph{no
 To be fair, the authors of Creusot \emph{do} point out that this is unstable research software.\footnote{See the README of the Creusot\cite{denisCreusot2023} repository for this warning.}
 If your work can tolerate frequent breakage, this might be a good option for you right now.
 Neither of us would use this in its current form though---once things stabilize, however, Creusot will be a formidable addition to Rust's already substantial clout in the reliable software space.
+
+\subsection{What we gained}
+
+We considered exposure to Why3 and more experience with how Rust's linear type system enables static analysis to be the two most valuable parts of this research.
+Why3 is a versatile platform that enjoys an impressive amount of stability and functionality.
+Rust's linear type system continues to deliver---not only does it make reasoning about memory tractable for a compiler, at also makes verifying code so much simpler than with C or C++ where naked pointers with undecidable lifetimes abound.
 
 \section{Resources}
 
@@ -307,5 +324,5 @@ Neither of us would use this in its current form though---once things stabilize,
 \end{document}
 
 % Local Variables:
-% jinx-local-words: "CreuSAT Creusot's Kani Pearlite WhyML creusot"
+% jinx-local-words: "CreuSAT Creusot's Kani Pearlite Qed WhyML creusot forall mlcfg"
 % End:
